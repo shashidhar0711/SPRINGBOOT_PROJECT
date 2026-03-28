@@ -52,6 +52,6 @@ public class ProductController {
     @PostMapping("/")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) throws Exception {
         Product createdProduct = productService.createProduct(product);
-        return new ResponseEntity<>(createdProduct, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
 }

@@ -59,7 +59,7 @@ public class SelfProductService implements ProductService{
     }
 
     @Override
-    public Product updateProduct(long id, Product product) throws ProductNotFound, CategoryNotFound {
+    public Product updateProduct(long id, Product product) throws ProductNotFound {
         Optional<Product> optionalProduct = productRepo.findById(id);
         if(optionalProduct.isEmpty()) {
             throw new ProductNotFound("Product not Fouind");
