@@ -3,12 +3,15 @@ package com.scaler.mslearning.Service;
 import com.scaler.mslearning.Exception.CategoryNotFound;
 import com.scaler.mslearning.Exception.ProductNotFound;
 import com.scaler.mslearning.Models.Product;
+import org.springframework.data.domain.Page;
 
 public interface ProductService {
 
     public Product getProductById(long id) throws ProductNotFound;
 
     public Product[] getAllProducts();
+
+    public Page<Product> getAllProducts(int pageNumber, int pageSize);
 
     public Product updateProduct(long id, Product product) throws ProductNotFound, CategoryNotFound;
 

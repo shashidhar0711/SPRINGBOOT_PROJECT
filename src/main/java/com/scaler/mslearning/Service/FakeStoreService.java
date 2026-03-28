@@ -4,6 +4,7 @@ import com.scaler.mslearning.Dto.FakeStoreRequestDto;
 import com.scaler.mslearning.Dto.FakeStoreResponseDto;
 import com.scaler.mslearning.Models.Category;
 import com.scaler.mslearning.Models.Product;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -56,6 +57,11 @@ public class FakeStoreService implements ProductService{
 
         }
         return products;
+    }
+
+    @Override
+    public Page<Product> getAllProducts(int pageNumber, int pageSize) {
+        return null;
     }
 
     public FakeStoreRequestDto ConvertProductToFakeStoreRequest(Product product) {

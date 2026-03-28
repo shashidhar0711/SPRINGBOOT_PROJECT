@@ -7,6 +7,9 @@ import com.scaler.mslearning.Models.Product;
 import com.scaler.mslearning.Repository.CategoryRepo;
 import com.scaler.mslearning.Repository.ProductRepo;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -48,6 +51,11 @@ public class SelfProductService implements ProductService{
         }
 
         return products;
+    }
+
+    public Page<Product> getAllProducts(int pageNumber, int pageSize) {
+        // Use pageable interface and pageRequest is the class where implements
+        return productRepo.findAll(PageRequest.of(pageNumber, pageSize, Sort.by("price").descending()));
     }
 
     @Override
