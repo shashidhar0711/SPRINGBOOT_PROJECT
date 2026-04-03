@@ -5,27 +5,49 @@ import com.scaler.mslearning.Dto.FakeStoreResponseDto;
 import com.scaler.mslearning.Models.Category;
 import com.scaler.mslearning.Models.Product;
 import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-@Service
+@Service("FakeStore")
 public class FakeStoreService implements ProductService{
 
     private RestTemplate restTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
-    public FakeStoreService(RestTemplate restTemplate) {
+    public FakeStoreService(RestTemplate restTemplate, RedisTemplate<String, Object> redisTemplate) {
         this.restTemplate = restTemplate;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
     public Product getProductById(long id) {
+        try {
+            Product product = (Product) redisTemplate.opsForHash().get("PRODUCTS", "PRODUCT_" + id);
+
+            if (product != null) {
+                // Cache hit
+                return product;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Redis not availble. fallback to api");
+        }
+
         FakeStoreResponseDto fakeStoreResponseDto = restTemplate.getForObject("https://fakestoreapi.com/products/"+id, FakeStoreResponseDto.class);
         
         if(fakeStoreResponseDto == null) {
             return null;
         }
+        Product p = ConvertFakeStoreDtoIntoProduct(fakeStoreResponseDto);
+
+        try {
+            redisTemplate.opsForHash().put("PRODUCTS", "PRODUCT_" + id, p);
+        } catch (Exception e) {
+            System.out.println("Redis not available. Skipping cache");
+        }
         
-        return ConvertFakeStoreDtoIntoProduct(fakeStoreResponseDto);
+        return p;
     }
 
     private Product ConvertFakeStoreDtoIntoProduct(FakeStoreResponseDto fdto) {

@@ -4,6 +4,7 @@ import com.scaler.mslearning.Exception.CategoryNotFound;
 import com.scaler.mslearning.Exception.ProductNotFound;
 import com.scaler.mslearning.Models.Product;
 import com.scaler.mslearning.Service.ProductService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class ProductController {
 
     private ProductService productService;
 
-    ProductController( ProductService productService) {
+    ProductController(@Qualifier("SelfProductService") ProductService productService) {
         this.productService = productService;
     }
 
